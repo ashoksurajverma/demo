@@ -52,9 +52,11 @@ exports.user_signup = (req, res, next) => {
 
 
 exports.user_login = (req, res, next) => {
-    User.find({ email: req.body.email })
+    console.log(" BODY", req.body)
+    User.find({ 'emailID': req.body.emailID })
       .exec()
       .then(user => {
+          console.log("=========#####", user)
         if (user.length < 1) {
           return res.status(401).json({
             message: "Auth failed"
@@ -77,14 +79,48 @@ exports.user_login = (req, res, next) => {
                 expiresIn: "1h"
               }
             );
-            return res.status(200).json({
-              message: "Auth successful",
-              token: token
-            });
+            console.log("============== USER TYPE: ", user[0].userType);
+            console.log("==========>>>>>", user[0].userType === "Admin")
+            if(user[0].userType === "Admin") {
+                User.find({ })
+                .select("_id emailID firstName lastName mobileNumber age")
+                .exec()
+                .then(users => {
+                    return res.status(200).json({
+                        message: "Auth successful",
+                        userProfile: {
+                            firstName: user[0].firstName,
+                            lastName: user[0].lastName,
+                            age: user[0].age,
+                            emailID: user[0].emailID,
+                            mobileNumber: user[0].mobileNumber,
+                            userType: user[0].userType
+                        },
+                        listOfUsers: users,
+                        token: token
+                    });
+                })
+                console.log("===========>>>>>, IF user", user);
+            }
+            if(user[0].userType !== "Admin") {
+                console.log("===========>>>>>,ELSE  user", user);
+                return res.status(200).json({
+                message: "Auth successful",
+                userProfile: {
+                    firstName: user[0].firstName,
+                    lastName: user[0].lastName,
+                    age: user[0].age,
+                    emailID: user[0].emailID,
+                    mobileNumber: user[0].mobileNumber,
+                    userType: user[0].userType
+                },
+                token: token
+                });
+            }
           }
-          res.status(401).json({
-            message: "Auth failed"
-          });
+        //   res.status(401).json({
+        //     message: "Auth failed"
+        //   });
         });
       })
       .catch(err => {
@@ -93,4 +129,20 @@ exports.user_login = (req, res, next) => {
           error: err
         });
       });
+  };
+
+  exports.get_all_users = (req, res, next) => {
+    User.find({ })
+    .select("_id emailID firstName lastName mobileNumber age")
+    .exec()
+    .then(users => {
+      res.status(200).json({
+          users: users,
+      })
+    })
+    .catch(error => {
+      res.status(500).json({
+          message: error
+      });
+    })
   };
