@@ -27,7 +27,8 @@ exports.user_signup = (req, res, next) => {
               firstName: req.body.firstName,
               lastName: req.body.lastName,
               mobileNumber: req.body.mobileNumber,
-              age: req.body.age
+              age: req.body.age,
+              userType: req.body.userType ? req.body.userType : 'Editor'
             });
             user
               .save()

@@ -12,7 +12,8 @@ const userSchema = mongoose.Schema({
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     },
     age: { type: Number, require: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    userType: { type: String, default: 'Editor'}
 });
 
 module.exports = mongoose.model('User', userSchema);

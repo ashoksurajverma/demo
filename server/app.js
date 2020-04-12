@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 
 const userRoutes = require('./api/routes/user');
 
-mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost:27017/test123', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.Promise = global.Promise;
 
 app.use(morgan("dev"));
